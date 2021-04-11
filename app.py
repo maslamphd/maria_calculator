@@ -1,22 +1,23 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import socket
 from datetime import datetime
 
-hostname = socket.gethostname()
-ip_address = socket.gethostbyname(hostname)
 today = datetime.today()
+#hostname = socket.gethostname()
+#ip_address = socket.gethostbyname(hostname)
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])   
 def welcome():
     return render_template('index.html')
 
 
 @app.route('/result', methods=['POST'])
 def result():
+    ip_address = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
     var_1 = request.form.get("var_1", type=int)
     var_2 = request.form.get("var_2", type=int)
     operation = request.form.get("operation")
